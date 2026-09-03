@@ -164,11 +164,25 @@ function addToHistory(name, number) {
 }
 
 // heart icon feature
-const heartIcons = document.getElementsByClassName("heart");
+const heartButtons = document.getElementsByClassName("heart");
 
-for (const icon of heartIcons) {
-  icon.addEventListener("click", function () {
-    heartCount++;
+for (const btn of heartButtons) {
+  btn.addEventListener("click", function () {
+    const icon = btn.querySelector("i");
+    const isSolid = icon.classList.contains("fa-solid");
+
+    if (isSolid) {
+      icon.classList.remove("fa-solid", "text-red-500");
+      icon.classList.add("fa-regular");
+      btn.setAttribute("aria-label", "Add to favorites");
+      heartCount = Math.max(0, heartCount - 1);
+    } else {
+      icon.classList.remove("fa-regular");
+      icon.classList.add("fa-solid", "text-red-500");
+      btn.setAttribute("aria-label", "Remove from favorites");
+      heartCount++;
+    }
+
     setInnerText("heart-count", heartCount);
   });
 }
