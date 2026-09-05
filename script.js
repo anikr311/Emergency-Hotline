@@ -145,9 +145,24 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+function renderEmptyHistory() {
+  const historyContainer = document.getElementById("call-history-container");
+  if (!historyContainer) return;
+  historyContainer.innerHTML = `
+    <div id="empty-history-msg" class="text-center text-gray-400 py-8 flex flex-col items-center justify-center">
+      <i class="fa-regular fa-clock text-3xl mb-2"></i>
+      <p class="text-sm font-medium">No recent calls</p>
+    </div>
+  `;
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const emptyMsg = document.getElementById("empty-history-msg");
+  if (emptyMsg) {
+    emptyMsg.remove();
+  }
 
   const div = document.createElement("div");
   div.innerHTML = `
@@ -227,8 +242,7 @@ for (const btn of callButtons) {
 }
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
-  const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  renderEmptyHistory();
 });
 
 
