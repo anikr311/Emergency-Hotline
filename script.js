@@ -192,13 +192,26 @@ const copyButtons = document.getElementsByClassName("copy-btn");
 
 for (const btn of copyButtons) {
   btn.addEventListener("click", async function (e) {
+    const copyBtn = e.target.closest(".copy-btn");
     const { name, number } = getCardDetails(e.target);
 
     try {
       await navigator.clipboard.writeText(number);
-      alert(`Copied: ${name} - ${number}`);
       copyCount++;
       setInnerText("copy-count", copyCount);
+
+      if (copyBtn && !copyBtn.dataset.copying) {
+        copyBtn.dataset.copying = "true";
+        const originalHTML = copyBtn.innerHTML;
+        copyBtn.innerHTML = `<i class="fa-solid fa-check text-green-600"></i> Copied!`;
+        copyBtn.classList.add("border-green-500", "bg-green-50", "text-green-700");
+
+        setTimeout(() => {
+          copyBtn.innerHTML = originalHTML;
+          copyBtn.classList.remove("border-green-500", "bg-green-50", "text-green-700");
+          delete copyBtn.dataset.copying;
+        }, 1500);
+      }
     } catch (error) {
       alert("Failed to copy. Please try again.");
     }
