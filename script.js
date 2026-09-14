@@ -149,6 +149,11 @@ function getCardDetails(target) {
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
 
+  const emptyState = historyContainer.querySelector(".text-center");
+  if (emptyState) {
+    emptyState.remove();
+  }
+
   const div = document.createElement("div");
   div.innerHTML = `
     <div class="bg-gray-50 rounded-xl p-3 flex justify-between items-start">
@@ -192,13 +197,32 @@ const copyButtons = document.getElementsByClassName("copy-btn");
 
 for (const btn of copyButtons) {
   btn.addEventListener("click", async function (e) {
-    const { name, number } = getCardDetails(e.target);
+    const targetBtn = e.currentTarget;
+    const { name, number } = getCardDetails(targetBtn);
 
     try {
       await navigator.clipboard.writeText(number);
-      alert(`Copied: ${name} - ${number}`);
       copyCount++;
       setInnerText("copy-count", copyCount);
+
+      const icon = targetBtn.querySelector("i");
+      const span = targetBtn.querySelector("span");
+
+      const originalIconClass = icon ? icon.className : "fa-regular fa-copy";
+      const originalText = span ? span.textContent : "Copy";
+
+      if (icon) {
+        icon.className = "fa-solid fa-check text-green-600";
+      }
+      if (span) {
+        span.textContent = "Copied!";
+      }
+
+      setTimeout(() => {
+        if (icon) icon.className = originalIconClass;
+        if (span) span.textContent = originalText;
+      }, 1500);
+
     } catch (error) {
       alert("Failed to copy. Please try again.");
     }
@@ -228,7 +252,11 @@ for (const btn of callButtons) {
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
   const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  historyContainer.innerHTML = `
+    <div class="text-center text-gray-400 py-6 text-sm">
+      No recent calls
+    </div>
+  `;
 });
 
 
