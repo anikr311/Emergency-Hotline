@@ -196,9 +196,18 @@ for (const btn of copyButtons) {
 
     try {
       await navigator.clipboard.writeText(number);
-      alert(`Copied: ${name} - ${number}`);
       copyCount++;
       setInnerText("copy-count", copyCount);
+
+      // Provide temporary inline feedback instead of an intrusive alert
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-check text-white"></i> Copied!`;
+      btn.classList.add("bg-green-600", "text-white", "border-green-600");
+
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("bg-green-600", "text-white", "border-green-600");
+      }, 1500);
     } catch (error) {
       alert("Failed to copy. Please try again.");
     }
