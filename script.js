@@ -148,6 +148,10 @@ function getCardDetails(target) {
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const emptyMessage = historyContainer.querySelector("p");
+  if (emptyMessage) {
+    historyContainer.innerHTML = "";
+  }
 
   const div = document.createElement("div");
   div.innerHTML = `
@@ -192,13 +196,24 @@ const copyButtons = document.getElementsByClassName("copy-btn");
 
 for (const btn of copyButtons) {
   btn.addEventListener("click", async function (e) {
-    const { name, number } = getCardDetails(e.target);
+    const targetBtn = e.target.closest("button");
+    const { name, number } = getCardDetails(targetBtn);
 
     try {
       await navigator.clipboard.writeText(number);
-      alert(`Copied: ${name} - ${number}`);
       copyCount++;
       setInnerText("copy-count", copyCount);
+
+      const originalHTML = targetBtn.innerHTML;
+      const originalLabel = targetBtn.getAttribute("aria-label") || "";
+
+      targetBtn.innerHTML = `<i class="fa-solid fa-check text-green-600"></i> Copied!`;
+      targetBtn.setAttribute("aria-label", `Copied ${name} number ${number}`);
+
+      setTimeout(() => {
+        targetBtn.innerHTML = originalHTML;
+        targetBtn.setAttribute("aria-label", originalLabel);
+      }, 1500);
     } catch (error) {
       alert("Failed to copy. Please try again.");
     }
@@ -228,7 +243,7 @@ for (const btn of callButtons) {
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
   const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  historyContainer.innerHTML = `<p class="text-gray-400 text-sm text-center py-6">No recent calls</p>`;
 });
 
 
