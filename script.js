@@ -149,6 +149,11 @@ function getCardDetails(target) {
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
 
+  const emptyState = historyContainer.querySelector(".empty-state");
+  if (emptyState) {
+    emptyState.remove();
+  }
+
   const div = document.createElement("div");
   div.innerHTML = `
     <div class="bg-gray-50 rounded-xl p-3 flex justify-between items-start">
@@ -228,7 +233,12 @@ for (const btn of callButtons) {
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
   const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  historyContainer.innerHTML = `
+    <div class="empty-state text-center py-8 text-gray-400">
+      <i class="fa-regular fa-folder-open text-3xl mb-2 block"></i>
+      <p class="text-sm">No call history yet</p>
+    </div>
+  `;
 });
 
 
