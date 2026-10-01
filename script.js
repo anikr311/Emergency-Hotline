@@ -145,19 +145,39 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+function renderEmptyHistoryState() {
+  const historyContainer = document.getElementById("call-history-container");
+  const clearBtn = document.getElementById("clear-btn");
+  if (clearBtn) clearBtn.disabled = true;
+
+  historyContainer.innerHTML = `
+    <div class="text-center py-8 text-gray-400 flex flex-col items-center justify-center">
+      <i class="fa-regular fa-clock text-3xl mb-2 text-gray-300"></i>
+      <p class="text-sm">No call history available</p>
+    </div>
+  `;
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const clearBtn = document.getElementById("clear-btn");
+
+  const emptyState = historyContainer.querySelector(".text-center");
+  if (emptyState) {
+    historyContainer.innerHTML = "";
+  }
+
+  if (clearBtn) clearBtn.disabled = false;
 
   const div = document.createElement("div");
+  div.className = "bg-gray-50 rounded-xl p-3 flex justify-between items-start";
   div.innerHTML = `
-    <div class="bg-gray-50 rounded-xl p-3 flex justify-between items-start">
-      <div class="">
-        <h3 class="font-semibold text-sm">${name}</h3>
-        <p class="text-gray-400 text-sm mt-1">${number}</p>
-      </div>
-      <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
+    <div class="">
+      <h3 class="font-semibold text-sm">${name}</h3>
+      <p class="text-gray-400 text-sm mt-1">${number}</p>
     </div>
+    <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
   `;
 
   historyContainer.append(div);
@@ -227,8 +247,7 @@ for (const btn of callButtons) {
 }
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
-  const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  renderEmptyHistoryState();
 });
 
 
