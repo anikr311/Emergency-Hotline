@@ -192,13 +192,23 @@ const copyButtons = document.getElementsByClassName("copy-btn");
 
 for (const btn of copyButtons) {
   btn.addEventListener("click", async function (e) {
-    const { name, number } = getCardDetails(e.target);
+    const targetBtn = e.currentTarget;
+    const { name, number } = getCardDetails(targetBtn);
 
     try {
       await navigator.clipboard.writeText(number);
-      alert(`Copied: ${name} - ${number}`);
       copyCount++;
       setInnerText("copy-count", copyCount);
+
+      // Inline feedback on the copy button instead of blocking alert
+      const originalHTML = targetBtn.innerHTML;
+      targetBtn.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
+      targetBtn.classList.add("bg-green-100", "text-green-700", "border-green-500");
+
+      setTimeout(() => {
+        targetBtn.innerHTML = originalHTML;
+        targetBtn.classList.remove("bg-green-100", "text-green-700", "border-green-500");
+      }, 1500);
     } catch (error) {
       alert("Failed to copy. Please try again.");
     }
