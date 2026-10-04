@@ -145,9 +145,24 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+// empty state helper for call history
+function renderEmptyHistoryState() {
+  const historyContainer = document.getElementById("call-history-container");
+  historyContainer.innerHTML = `
+    <div id="empty-history-msg" class="text-center py-8 text-gray-400 flex flex-col items-center justify-center gap-2">
+      <i class="fa-regular fa-clock text-3xl text-gray-300"></i>
+      <p class="text-sm">No call history yet</p>
+    </div>
+  `;
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const emptyMsg = document.getElementById("empty-history-msg");
+  if (emptyMsg) {
+    emptyMsg.remove();
+  }
 
   const div = document.createElement("div");
   div.innerHTML = `
@@ -192,13 +207,23 @@ const copyButtons = document.getElementsByClassName("copy-btn");
 
 for (const btn of copyButtons) {
   btn.addEventListener("click", async function (e) {
-    const { name, number } = getCardDetails(e.target);
+    const targetBtn = e.target.closest(".copy-btn");
+    const { name, number } = getCardDetails(targetBtn);
 
     try {
       await navigator.clipboard.writeText(number);
-      alert(`Copied: ${name} - ${number}`);
       copyCount++;
       setInnerText("copy-count", copyCount);
+
+      // Inline feedback state
+      const originalHTML = targetBtn.innerHTML;
+      targetBtn.innerHTML = `<i class="fa-solid fa-check text-green-600"></i><span class="text-green-600 font-semibold">Copied!</span>`;
+      targetBtn.classList.add("border-green-500", "bg-green-50");
+
+      setTimeout(() => {
+        targetBtn.innerHTML = originalHTML;
+        targetBtn.classList.remove("border-green-500", "bg-green-50");
+      }, 1500);
     } catch (error) {
       alert("Failed to copy. Please try again.");
     }
@@ -227,8 +252,7 @@ for (const btn of callButtons) {
 }
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
-  const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  renderEmptyHistoryState();
 });
 
 
