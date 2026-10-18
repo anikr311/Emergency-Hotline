@@ -145,9 +145,25 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+// function to render empty state in call history
+function renderEmptyHistoryState() {
+  const historyContainer = document.getElementById("call-history-container");
+  historyContainer.innerHTML = `
+    <div id="empty-history" class="flex flex-col items-center justify-center py-8 text-center text-gray-400">
+      <i class="fa-solid fa-phone-slash text-3xl mb-2 text-gray-300"></i>
+      <p class="font-medium text-sm">No call history yet</p>
+      <p class="text-xs text-gray-400 mt-1">Calls you make will appear here.</p>
+    </div>
+  `;
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const emptyState = document.getElementById("empty-history");
+  if (emptyState) {
+    emptyState.remove();
+  }
 
   const div = document.createElement("div");
   div.innerHTML = `
@@ -227,8 +243,8 @@ for (const btn of callButtons) {
 }
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
-  const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  renderEmptyHistoryState();
 });
 
+renderEmptyHistoryState();
 
