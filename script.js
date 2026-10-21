@@ -145,6 +145,32 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+// function to update call history empty state UI
+function updateHistoryState() {
+  const historyContainer = document.getElementById("call-history-container");
+  const emptyMsg = document.getElementById("empty-history-msg");
+  const clearBtn = document.getElementById("clear-btn");
+  if (!historyContainer) return;
+
+  const items = Array.from(historyContainer.children).filter(
+    (child) => child.id !== "empty-history-msg"
+  );
+
+  if (items.length === 0) {
+    if (emptyMsg) emptyMsg.classList.remove("hidden");
+    if (clearBtn) {
+      clearBtn.disabled = true;
+      clearBtn.setAttribute("aria-disabled", "true");
+    }
+  } else {
+    if (emptyMsg) emptyMsg.classList.add("hidden");
+    if (clearBtn) {
+      clearBtn.disabled = false;
+      clearBtn.setAttribute("aria-disabled", "false");
+    }
+  }
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
@@ -161,6 +187,7 @@ function addToHistory(name, number) {
   `;
 
   historyContainer.append(div);
+  updateHistoryState();
 }
 
 // heart icon feature
@@ -228,7 +255,14 @@ for (const btn of callButtons) {
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
   const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  const emptyMsg = document.getElementById("empty-history-msg");
+  if (emptyMsg) {
+    historyContainer.replaceChildren(emptyMsg);
+  } else {
+    historyContainer.innerHTML = "";
+  }
+  updateHistoryState();
 });
 
+updateHistoryState();
 
