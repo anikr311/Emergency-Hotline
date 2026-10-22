@@ -145,6 +145,18 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+// function to toggle empty history state
+function updateEmptyState() {
+  const historyContainer = document.getElementById("call-history-container");
+  const emptyState = document.getElementById("empty-history");
+  if (!historyContainer || !emptyState) return;
+  if (historyContainer.children.length === 0) {
+    emptyState.classList.remove("hidden");
+  } else {
+    emptyState.classList.add("hidden");
+  }
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
@@ -161,6 +173,7 @@ function addToHistory(name, number) {
   `;
 
   historyContainer.append(div);
+  updateEmptyState();
 }
 
 // heart icon feature
@@ -229,6 +242,7 @@ for (const btn of callButtons) {
 document.getElementById("clear-btn").addEventListener("click", function () {
   const historyContainer = document.getElementById("call-history-container");
   historyContainer.innerHTML = "";
+  updateEmptyState();
 });
 
 
