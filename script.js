@@ -145,19 +145,36 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+// function to render empty call history state
+function renderEmptyHistoryState() {
+  const historyContainer = document.getElementById("call-history-container");
+  historyContainer.innerHTML = `
+    <div class="empty-history-state flex flex-col items-center justify-center py-8 text-center text-gray-400">
+      <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-600 mb-3">
+        <i class="fa-solid fa-phone-slash text-lg"></i>
+      </div>
+      <p class="font-medium text-gray-700 text-sm">No call history</p>
+      <p class="text-xs text-gray-400 mt-1 max-w-[200px]">Calls you make will appear here automatically.</p>
+    </div>
+  `;
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const emptyState = historyContainer.querySelector(".empty-history-state");
+  if (emptyState) {
+    historyContainer.innerHTML = "";
+  }
 
   const div = document.createElement("div");
+  div.className = "bg-gray-50 rounded-xl p-3 flex justify-between items-start";
   div.innerHTML = `
-    <div class="bg-gray-50 rounded-xl p-3 flex justify-between items-start">
-      <div class="">
-        <h3 class="font-semibold text-sm">${name}</h3>
-        <p class="text-gray-400 text-sm mt-1">${number}</p>
-      </div>
-      <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
+    <div class="min-w-0">
+      <h3 class="font-semibold text-sm">${name}</h3>
+      <p class="text-gray-400 text-sm mt-1">${number}</p>
     </div>
+    <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
   `;
 
   historyContainer.append(div);
@@ -227,8 +244,7 @@ for (const btn of callButtons) {
 }
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
-  const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  renderEmptyHistoryState();
 });
 
 
