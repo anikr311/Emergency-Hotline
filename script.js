@@ -145,22 +145,39 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+// function to render empty state
+function renderHistoryEmptyState() {
+  const historyContainer = document.getElementById("call-history-container");
+  historyContainer.innerHTML = `
+    <div id="history-empty-state" class="py-8 px-4 text-center text-gray-500 flex flex-col items-center justify-center">
+      <div class="w-12 h-12 mb-3 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+        <i class="fa-regular fa-clock text-xl"></i>
+      </div>
+      <p class="font-medium text-sm text-gray-700">No call history yet</p>
+      <p class="text-xs text-gray-400 mt-1">Calls you make will appear here</p>
+    </div>
+  `;
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const emptyState = document.getElementById("history-empty-state");
+  if (emptyState) {
+    emptyState.remove();
+  }
 
   const div = document.createElement("div");
+  div.className = "bg-gray-50 rounded-xl p-3 flex justify-between items-start";
   div.innerHTML = `
-    <div class="bg-gray-50 rounded-xl p-3 flex justify-between items-start">
-      <div class="">
-        <h3 class="font-semibold text-sm">${name}</h3>
-        <p class="text-gray-400 text-sm mt-1">${number}</p>
-      </div>
-      <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
+    <div class="">
+      <h3 class="font-semibold text-sm">${name}</h3>
+      <p class="text-gray-400 text-sm mt-1">${number}</p>
     </div>
+    <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
   `;
 
-  historyContainer.append(div);
+  historyContainer.prepend(div);
 }
 
 // heart icon feature
@@ -227,8 +244,7 @@ for (const btn of callButtons) {
 }
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
-  const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  renderHistoryEmptyState();
 });
 
 
