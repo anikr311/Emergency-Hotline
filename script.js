@@ -145,19 +145,34 @@ function getCardDetails(target) {
   return { name, number };
 }
 
+// render empty state if history is empty
+function renderEmptyHistoryState() {
+  const historyContainer = document.getElementById("call-history-container");
+  historyContainer.innerHTML = `
+    <div class="empty-history text-center py-8 px-4 text-gray-400" role="status">
+      <i class="fa-regular fa-clock text-3xl text-gray-300 mb-2"></i>
+      <p class="font-medium text-sm text-gray-600">No call history yet</p>
+      <p class="text-xs text-gray-400 mt-1">Calls you make will appear here</p>
+    </div>
+  `;
+}
+
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const emptyState = historyContainer.querySelector(".empty-history");
+  if (emptyState) {
+    emptyState.remove();
+  }
 
   const div = document.createElement("div");
+  div.className = "bg-gray-50 rounded-xl p-3 flex justify-between items-start";
   div.innerHTML = `
-    <div class="bg-gray-50 rounded-xl p-3 flex justify-between items-start">
-      <div class="">
-        <h3 class="font-semibold text-sm">${name}</h3>
-        <p class="text-gray-400 text-sm mt-1">${number}</p>
-      </div>
-      <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
+    <div class="min-w-0">
+      <h3 class="font-semibold text-sm">${name}</h3>
+      <p class="text-gray-400 text-sm mt-1">${number}</p>
     </div>
+    <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
   `;
 
   historyContainer.append(div);
@@ -227,8 +242,11 @@ for (const btn of callButtons) {
 }
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
-  const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  renderEmptyHistoryState();
 });
 
+// initialize empty state if container has no call history items
+if (!document.getElementById("call-history-container").children.length) {
+  renderEmptyHistoryState();
+}
 
