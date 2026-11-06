@@ -148,16 +148,24 @@ function getCardDetails(target) {
 // function to add
 function addToHistory(name, number) {
   const historyContainer = document.getElementById("call-history-container");
+  const clearBtn = document.getElementById("clear-btn");
+  const emptyState = document.getElementById("history-empty-state");
+
+  if (emptyState) {
+    emptyState.remove();
+  }
+  if (clearBtn) {
+    clearBtn.disabled = false;
+  }
 
   const div = document.createElement("div");
+  div.className = "bg-gray-50 rounded-xl p-3 flex justify-between items-start";
   div.innerHTML = `
-    <div class="bg-gray-50 rounded-xl p-3 flex justify-between items-start">
-      <div class="">
-        <h3 class="font-semibold text-sm">${name}</h3>
-        <p class="text-gray-400 text-sm mt-1">${number}</p>
-      </div>
-      <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
+    <div class="">
+      <h3 class="font-semibold text-sm">${name}</h3>
+      <p class="text-gray-400 text-sm mt-1">${number}</p>
     </div>
+    <span class="font-mono text-sm">${new Date().toLocaleTimeString()}</span>
   `;
 
   historyContainer.append(div);
@@ -228,7 +236,14 @@ for (const btn of callButtons) {
 // clear history feature
 document.getElementById("clear-btn").addEventListener("click", function () {
   const historyContainer = document.getElementById("call-history-container");
-  historyContainer.innerHTML = "";
+  historyContainer.innerHTML = `
+    <div id="history-empty-state" class="flex flex-col items-center justify-center py-8 text-center text-gray-400">
+      <i class="fa-regular fa-clock text-3xl mb-2 text-gray-300"></i>
+      <p class="text-sm font-medium text-gray-500">No call history</p>
+      <p class="text-xs text-gray-400 mt-1">Calls you make will appear here.</p>
+    </div>
+  `;
+  this.disabled = true;
 });
 
 
